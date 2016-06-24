@@ -1,38 +1,100 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+Configure PAM to enable two-factor authentication with yubikey. Optional is
+display locking when the yubikey is remove.
+
+**Attention: Please read and understand the documentation of
+the yubi2factor_enforce variable below. This role can lock you completely out of
+your system.**
+
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The role installs on host:
+
+    * pam_yubico
+    * yubikey-personalization-gui
+
+This role is designed to work with a YubiKey from [Yubico, Inc.](http://yubico.com/).
+
+
+The YubiKey must be configured with following configurations:
+* One slot must be configured in SHA/HMAC challenge-response mode
+* The serial number must be readable
+* challenge-response must be usable without button push
+
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### Required Variables:
+
+Per default the role only enable single login with YubiKey **or** password. After
+you checked the correct functionality of both logins, once with password and
+once with YubiKey, you can enable the two-factor condition.
+
+If the the YubiKey login don't work you will have no option to login in your
+system after enabling the two-factor condition.
+
+  yubi2factor_enforce: false
+
+
+### Optional Variables:
+
+This role comes with a automatic screen-saver lock of gnome shell user sessions
+when the YubiKey is removed from the machine. To disable this behavior set the
+following variable to false.
+
+  yubi2factor_lock_screen_on_remove: true
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
+
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
+    - hosts: all
+      remote_user: root
+      vars_files:
+        - yubi2factor.yml
       roles:
-         - { role: username.rolename, x: 42 }
+        - martin-v.yubi2factor
+
+
+Example variables file
+----------------------
+
+TODO
+
+
+Tips
+----
+
+TODO
+
+
+Open tasks
+----------
+
+0. Complete the documentation
+  0. Document ~/yubikey_dont_lock_on_next_remove
+0. Write <del>more</del> tests
+0. Add CI for the role
+0. Implement better solution for multiple user
+
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role was created in 2016 by [Martin V](https://github.com/martin-v).

@@ -1,0 +1,11 @@
+---
+
+# TODO better solution for normal user
+# TODO regenerate challenge responses periodic
+
+- name: Create challenge response for root.
+  shell: ykpamcfg -v -{{ yubi2factor_slot_nr }}
+
+- name: Create challenge response for {{ username }}.
+  shell: ykpamcfg -v -{{ yubi2factor_slot_nr }}
+  become_user: "{{ username }}"

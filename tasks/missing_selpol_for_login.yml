@@ -1,0 +1,22 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Ensure that selinux policy directory exist
+  file:
+    path: "{{ yubi2factor_selinux_policy_folder }}"
+    state: directory
+
+- name: Copy yubikey_login selinux policies
+  copy:
+    src: yubikey_login_pol.pp
+    dest: "{{ yubi2factor_selinux_policy_folder }}/yubikey_login_pol.pp"
+  register: cp_yubikey_login_pol_output
+
+- name: Reloading yubikey_login selinux policy
+  shell:  /usr/sbin/semodule -u {{ yubi2factor_selinux_policy_folder }}/yubikey_login_pol.pp
+  when: cp_yubikey_login_pol_output.changed
+
+
+- etckeeper: "action=commit msg='ansible: yubi2factor.missing_selpol_for_login' rev={{ revision }}"

@@ -1,2 +1,17 @@
 ---
-# defaults file for yubi2factor
+
+# See README.md for details.
+yubi2factor_enforce: false
+
+# See README.md for details.
+yubi2factor_lock_screen_on_remove: true
+
+
+# unusually variables, normaly you don't need change any of them.
+
+
+# Path for gnome lock script.
+yubi2factor_lock_script_gnome: /usr/local/bin/yubikey-gnome-lock
+
+# Folder for selinux policies
+yubi2factor_selinux_policy_folder: /usr/share/selinux/packages/

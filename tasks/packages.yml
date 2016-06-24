@@ -1,0 +1,14 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Install yubikey tools and libs
+  package: name={{ item }} state=present
+  tags: [ packages ]
+  with_items:
+    - pam_yubico
+    - yubikey-personalization-gui
+
+
+- etckeeper: "action=commit msg='ansible: yubi2factor.packages' rev={{ revision }}"

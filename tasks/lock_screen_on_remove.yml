@@ -1,0 +1,20 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Copy gnome lock screen script
+  copy:
+    src: yubikey-gnome-lock
+    dest: "{{ yubi2factor_lock_script_gnome }}"
+    mode: 0755
+
+- name: Copy udev rules to trigger lock script
+  copy:
+    content: SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="1050", ENV{ID_MODEL_ID}=="0010", RUN+="{{ yubi2factor_lock_script_gnome }}"
+    dest: /etc/udev/rules.d/70-yubikey_lock_script.rules
+  notify:
+  - Reload udev rules
+
+
+- etckeeper: "action=commit msg='ansible: yubi2factor.lock_screen_on_remove' rev={{ revision }}"

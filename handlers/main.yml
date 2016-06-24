@@ -1,2 +1,5 @@
 ---
-# handlers file for yubi2factor
+
+- name: Reload udev rules
+  command:  udevadm control --reload-rules ; udevadm trigger
+

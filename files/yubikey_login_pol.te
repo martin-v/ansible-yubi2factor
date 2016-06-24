@@ -1,0 +1,9 @@
+module yubikey_login_pol 1.0;
+
+require {
+	type local_login_t;
+	type udev_var_run_t;
+	class file { open read getattr };
+}
+
+allow local_login_t udev_var_run_t:file { open read getattr };
