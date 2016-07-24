@@ -1,20 +1,20 @@
-#!/bin/bash
+#!/bin/bash -e
 #
 # Lock all user-sessions with gnome desktop.
 
-for u in `who | cut -d " " -f 1 | sort -u`
+for u in $(who | cut -d " " -f 1 | sort -u)
 do
 	if [ -f "/home/$u/yubikey_dont_lock_on_next_remove" ]; then
 		rm "/home/$u/yubikey_dont_lock_on_next_remove"
 		continue
 	fi
 
-	GN_SESS_ID=`pgrep gnome-session -u \$u`
+	GN_SESS_ID=$(pgrep gnome-session -u \$u)
 	if [ ! -n "$GN_SESS_ID" ]; then
 		continue
 	fi
 
-	GN_SESS_DBUS_ADDRESS=`grep -z '^DBUS_SESSION_BUS_ADDRESS=' /proc/$GN_SESS_ID/environ`
+	GN_SESS_DBUS_ADDRESS=$(grep -z '^DBUS_SESSION_BUS_ADDRESS=' "/proc/$GN_SESS_ID/environ")
 	su "$u" -c "
 		export '$GN_SESS_DBUS_ADDRESS'
 		dbus-send --type=method_call \
