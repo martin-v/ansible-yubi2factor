@@ -9,6 +9,12 @@ yubi2factor_lock_screen_on_remove: true
 
 # unusually variables, normaly you don't need change any of them.
 
+# Path for atomic update challenge/response script
+yubi2factor_script_update_challenge: /usr/local/bin/yubikey-atomic-update-challenge
+
+# Path for update challenge/response cron logfile
+yubi2factor_cron_update_challenge_log: "$HOME/.yubico/cron-update-challenge.log"
+
 
 # Path for gnome lock script.
 yubi2factor_lock_script_gnome: /usr/local/bin/yubikey-gnome-lock

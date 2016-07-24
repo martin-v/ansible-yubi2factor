@@ -1,11 +1,29 @@
 ---
 
-# TODO better solution for normal user
-# TODO regenerate challenge responses periodic
+- etckeeper: action=begin
 
-- name: Create challenge response for root.
-  shell: ykpamcfg -v -{{ yubi2factor_slot_nr }}
 
-- name: Create challenge response for {{ username }}.
-  shell: ykpamcfg -v -{{ yubi2factor_slot_nr }}
-  become_user: "{{ username }}"
+- name: Copy atomic update challenge/response script
+  copy:
+    src: yubikey-atomic-update-challenge
+    dest: "{{ yubi2factor_script_update_challenge }}"
+    mode: 0755
+
+
+- name: Create cron for challenge response creation for root.
+  cron:
+    name: yubi2factor_script_update_challenge
+    job: "{{ yubi2factor_script_update_challenge }}"
+    minute: 42
+    hour: "*/4"
+
+- name: Create cron for challenge response creation for {{ username }}.
+  cron:
+    name: yubi2factor_script_update_challenge
+    job: "{{ yubi2factor_script_update_challenge }} >> {{ yubi2factor_cron_update_challenge_log }} 2>&1"
+    user: "{{ username }}"
+    minute: 42
+    hour: "*/4"
+
+
+- etckeeper: "action=commit msg='ansible: yubi2factor.create_challenge_responses' rev={{ revision }}"
