@@ -9,6 +9,8 @@ Vagrant.configure(2) do |config|
 	config.vm.hostname = "yubi2factortest"
 	config.vm.provider :libvirt do |libvirt|
 		libvirt.usb :vendor => '1050', :startupPolicy => 'requisite'
+	end
+	config.vm.provision :shell, inline: "dnf -y install libselinux-python python2-dnf gdm"
 	config.vm.provision :ansible do |ansible|
 		ansible.playbook = "tests/test.yml"
 		ansible.verbose = "v"
