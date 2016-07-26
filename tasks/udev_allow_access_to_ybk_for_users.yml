@@ -1,14 +1,8 @@
 ---
 
-- etckeeper: action=begin
-
-
 - name: Copy udev rules for correct yubikey device mode
   copy:
     content: SUBSYSTEM=="usb", ACTION=="add|change", ATTR{idVendor}=="1050", ATTR{idProduct}=="0010", MODE="0666"
     dest: /etc/udev/rules.d/70-yubikey_fix_mode.rules
   notify:
   - Reload udev rules
-
-
-- etckeeper: "action=commit msg='ansible: yubi2factor.udev_allow_access_to_ybk_for_users' rev={{ revision }}"

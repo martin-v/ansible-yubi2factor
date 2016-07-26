@@ -1,8 +1,5 @@
 ---
 
-- etckeeper: action=begin
-
-
 - name: Copy atomic update challenge/response script
   copy:
     src: yubikey-atomic-update-challenge
@@ -24,6 +21,3 @@
     user: "{{ username }}"
     minute: 42
     hour: "*/4"
-
-
-- etckeeper: "action=commit msg='ansible: yubi2factor.create_challenge_responses' rev={{ revision }}"

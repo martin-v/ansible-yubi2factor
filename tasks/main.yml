@@ -1,8 +1,5 @@
 ---
 
-- etckeeper: action=begin
-
-
 - include: missing_selpol_for_login.yml
 - include: udev_allow_access_to_ybk_for_users.yml
 
@@ -12,6 +9,3 @@
 
 - include: lock_screen_on_remove.yml
   when: yubi2factor_lock_screen_on_remove
-
-
-- etckeeper: action=end

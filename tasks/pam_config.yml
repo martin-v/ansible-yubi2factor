@@ -1,8 +1,5 @@
 ---
 
-- etckeeper: action=begin
-
-
 - name: Set ybk_pam_req as default to not enforce 2factor
   set_fact:
     ybk_pam_req: sufficient
@@ -26,6 +23,3 @@
     insertafter: "auth        substack      password-auth"
     regexp: "auth.*pam_yubico.so.*"
     line: "auth        {{ ybk_pam_req }}      pam_yubico.so mode=challenge-response"
-
-
-- etckeeper: "action=commit msg='ansible: yubi2factor.pam_config' rev={{ revision }}"
