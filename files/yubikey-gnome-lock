@@ -9,7 +9,7 @@ do
 		continue
 	fi
 
-	GN_SESS_ID=$(pgrep gnome-session -u \$u)
+	GN_SESS_ID=$(pgrep gnome-session -u "$u")
 	if [ ! -n "$GN_SESS_ID" ]; then
 		continue
 	fi
