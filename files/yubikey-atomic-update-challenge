@@ -9,6 +9,7 @@ set -o pipefail
 # log current date
 date --iso-8601=m
 
+mkdir -p "$HOME/.yubico"
 cd "$HOME/.yubico"
 
 yubikey_id="$( ykinfo -sq )"
