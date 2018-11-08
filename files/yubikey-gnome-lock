@@ -14,6 +14,10 @@ do
 		continue
 	fi
 
+	if [ -f "/home/$logged_in_user/yubikey_dont_lock_on_remove" ]; then
+		continue
+	fi
+
 	gnome_session_id=$( pgrep gnome-session -u "$logged_in_user" )
 
 	if [ -z "$gnome_session_id" ]; then
