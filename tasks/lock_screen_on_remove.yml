@@ -11,7 +11,16 @@
 
 - name: Copy udev rules to trigger lock script
   copy:
-    content: SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="1050", ENV{ID_MODEL_ID}=="0010", RUN+="{{ yubi2factor_lock_script_gnome }}"
+    content: |
+      # Trigger lock script on yubikey removal
+      #
+      # This don't work because the ATTR are not existing after removal
+      #content: SUBSYSTEM=="usb", ACTION=="remove", ATTR{idVendor}=="1050", ATTR{idProduct}=="0010", RUN+="{{ yubi2factor_lock_script_gnome }}"
+      # Why this dosn't work, no idea
+      #content: SUBSYSTEM=="usb", ACTION=="remove", ENV{ID_VENDOR_ID}=="1050", ENV{ID_MODEL_ID}=="0010", RUN+="{{ yubi2factor_lock_script_gnome }}"
+      #
+      # This works, but isn't testet a lot
+      SUBSYSTEM=="usb", ACTION=="remove", ENV{PRODUCT}="3/1050/10/111", RUN+="{{ yubi2factor_lock_script_gnome }}"
     dest: /etc/udev/rules.d/70-yubikey_lock_script.rules
   notify:
   - Reload udev rules

@@ -1,16 +1,21 @@
-#!/bin/bash -ex
+#!/bin/bash
 #
 # Perform a atomic update of yubikey challenge/response file
+
+set -o nounset
+set -o errexit
+set -o pipefail
 
 # log current date
 date --iso-8601=m
 
+mkdir -p "$HOME/.yubico"
 cd "$HOME/.yubico"
 
-keyid="$( ykinfo -sq )"
+yubikey_id="$( ykinfo -sq )"
 
 # with param '-p "."' ykpamcfg creates a file containing user, instead of default
 ykpamcfg -p "."
 
 # now move file to default location
-mv --update --force "$USER-$keyid" "challenge-$keyid"
+mv --update --force "$USER-$yubikey_id" "challenge-$yubikey_id"

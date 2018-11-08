@@ -1,24 +1,36 @@
-#!/bin/bash -e
+#!/bin/bash
 #
 # Lock all user-sessions with gnome desktop.
 
-for u in $(who | cut -d " " -f 1 | sort -u)
+set -o nounset
+set -o errexit
+set -o pipefail
+
+for logged_in_user in $( who | cut -d " " -f 1 | sort -u )
 do
-	if [ -f "/home/$u/yubikey_dont_lock_on_next_remove" ]; then
-		rm "/home/$u/yubikey_dont_lock_on_next_remove"
+
+	if [ -f "/home/$logged_in_user/yubikey_dont_lock_on_next_remove" ]; then
+		rm "/home/$logged_in_user/yubikey_dont_lock_on_next_remove"
 		continue
 	fi
 
-	GN_SESS_ID=$(pgrep gnome-session -u \$u)
-	if [ ! -n "$GN_SESS_ID" ]; then
+	if [ -f "/home/$logged_in_user/yubikey_dont_lock_on_remove" ]; then
 		continue
 	fi
 
-	GN_SESS_DBUS_ADDRESS=$(grep -z '^DBUS_SESSION_BUS_ADDRESS=' "/proc/$GN_SESS_ID/environ")
-	su "$u" -c "
-		export '$GN_SESS_DBUS_ADDRESS'
+	gnome_session_id=$( pgrep gnome-session -u "$logged_in_user" )
+
+	if [ -z "$gnome_session_id" ]; then
+		continue
+	fi
+
+	gnome_dbus_address=$( grep -z '^DBUS_SESSION_BUS_ADDRESS=' "/proc/$gnome_session_id/environ" )
+
+	su "$logged_in_user" -c "
+		export '$gnome_dbus_address'
 		dbus-send --type=method_call \
 			--dest=org.gnome.ScreenSaver \
 			/org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock
 	"
+
 done

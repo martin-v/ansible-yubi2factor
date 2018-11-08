@@ -10,20 +10,19 @@
 - name: Enforce 2factor wit ybk_pam_req when requested
   set_fact:
     ybk_pam_req: required
-  when: yubi2factor_enforce
-
+  when: yubi2factor_enforce == true
 
 - name: Add pam configuration for system logins
   lineinfile:
     dest: /etc/pam.d/system-auth
-    insertafter: "auth        required      pam_env.so"
+    insertafter: "auth\\W*required\\W*pam_env.so"
     regexp: "auth.*pam_yubico.so.*"
-    line: "auth        {{ ybk_pam_req }}      pam_yubico.so mode=challenge-response"
+    line: "auth        {{ ybk_pam_req }}                                     pam_yubico.so mode=challenge-response"
 
 - name: Add pam configuration for gdm logins
   lineinfile:
     dest: /etc/pam.d/gdm-password
-    insertafter: "auth        substack      password-auth"
+    insertafter: "auth\\W*substack\\W*password-auth"
     regexp: "auth.*pam_yubico.so.*"
     line: "auth        {{ ybk_pam_req }}      pam_yubico.so mode=challenge-response"
 
