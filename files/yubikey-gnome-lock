@@ -1,6 +1,10 @@
-#!/bin/bash -e
+#!/bin/bash
 #
 # Lock all user-sessions with gnome desktop.
+
+set -o nounset
+set -o errexit
+set -o pipefail
 
 for logged_in_user in $(who | cut -d " " -f 1 | sort -u)
 do
